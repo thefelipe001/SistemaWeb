@@ -1,0 +1,108 @@
+﻿@model IEnumerable<Model.Entity.Moldes.ClienteEntity>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2 class="text-center text-success">Listado de Clientes</h2>
+<div class="well well-sm">
+    <a class="btn btn-primary" title="Agregar" href="~/Cliente/Crear">  <span class="fa fa-user"></span> Nuevo</a>
+
+</div>
+<table class="table table-hover table-striped">
+    <thead>
+        <tr class="bg-primary">
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+            <th>Celular</th>
+            <th>Nombre Del Dept.</th>
+
+
+
+
+            <th colspan="3">Operaciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var lista in Model)
+        {
+        <tr>
+            <td>@lista.IdCliente</td>
+            <td>@lista.Nombres</td>
+            <td>@lista.Apellidos</td>
+            <td>@lista.Email</td>
+            <td>@lista.Celular</td>
+            <td>@lista.NombreDepartamento</td>
+
+            <td>
+                <a class="btn btn-danger" onclick="Eliminareditorial(@lista.IdCliente)" title="Eliminar"><span class="fa fa-book"></span></a>
+                <a class="btn btn-warning" href="~/Cliente/MostrarDireccion/@lista.IdCliente" title="Modficar"><span class="fa fa-eyedropper"></span></a>
+
+            </td>
+            
+
+        </tr>
+        }
+    </tbody>
+
+</table>
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+
+        function Eliminareditorial(id) {
+
+            $.confirm({
+
+                title: 'Eliminar Cliente!',
+                content: '¿Estás seguro de Eliminar este Cliente?',
+
+                buttons: {
+                    Confirmar: function () {
+                        //  LoadingOverlayShow("#tableDemo");
+                        $.ajax({
+                            url: "/Cliente/Eliminar",
+                            type: "post",
+                            data: { id }
+                        }).done(function (response) { //
+                            console.log(response);
+                            // LoadingOverlayHide("#tableDemo");
+                            if (response.ok) {
+                                alert("Cliente Eliminado correctamente.");
+                                window.location = response.toRedirect;
+                            }
+                            else {
+                                alert(response.msg);
+                            }
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            //  LoadingOverlayHide("#tableDemo");
+                            alert(textStatus);
+                        });
+                    },
+                    Cancelar: function () {
+                        //$.alert('Canceled!');
+                    },
+                }
+            });
+        }
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+}
+
+
